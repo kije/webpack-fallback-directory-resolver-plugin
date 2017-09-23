@@ -1,4 +1,4 @@
-# weback-fallback-directory-resolver-plugin
+# webpack-fallback-directory-resolver-plugin
 Webpack Resolver plugin to resolve modules and files through a fallback chain at compile time.
 
 ## Description
@@ -84,12 +84,12 @@ export default (num) => {
 Now suppose you want to create two separate webpack builds for each language. 
 The resulting build should only contain the translations strings and the ordinal function for its language.
 
-To do this, you can set up `weback-fallback-directory-resolver-plugin` to resolve these files based on a language parameter (Environment variable) on build time.
+To do this, you can set up `webpack-fallback-directory-resolver-plugin` to resolve these files based on a language parameter (Environment variable) on build time.
 
 ```js
 // webpack.config.js
 
-const FallbackDirectoryResolverPlugin = require('weback-fallback-directory-resolver-plugin');
+const FallbackDirectoryResolverPlugin = require('webpack-fallback-directory-resolver-plugin');
 const path = require('path');
 
 // get the language from the environment
@@ -147,7 +147,7 @@ export {
 
 Another usage example would be a react application, which has multiple themes with different JSX-Markups. 
 
-For more information, take a look at the [example application](https://github.com/kije/weback-fallback-directory-resolver-plugin/tree/master/example). 
+For more information, take a look at the [example application](https://github.com/kije/webpack-fallback-directory-resolver-plugin/tree/master/example). 
 
 
 
@@ -156,22 +156,22 @@ For more information, take a look at the [example application](https://github.co
 Install this plugin via `yarn` or `npm` alongside with [`webpack`](https://www.npmjs.com/package/webpack).
 
 ```bash
-yarn add --dev weback-fallback-directory-resolver-plugin
+yarn add --dev webpack-fallback-directory-resolver-plugin
 ```
 or
 
 ```bash
-npm install --save-dev weback-fallback-directory-resolver-plugin
+npm install --save-dev webpack-fallback-directory-resolver-plugin
 ```
 
 ## Usage
-Add `weback-fallback-directory-resolver-plugin` as a `resolve`-Plugin in your `webpack.config.js`-File
+Add `webpack-fallback-directory-resolver-plugin` as a `resolve`-Plugin in your `webpack.config.js`-File
 
 **Example**
 ```js
 // webpack.config.js
 
-const FallbackDirectoryResolverPlugin = require('weback-fallback-directory-resolver-plugin');
+const FallbackDirectoryResolverPlugin = require('webpack-fallback-directory-resolver-plugin');
 
 // ...
 
@@ -219,4 +219,4 @@ The plugin tries to resolve the file first in the first directory. If it can't f
 
 
 ## Bugs
-If you encounter any bugs, please consider [opening an issue on GitHub](https://github.com/kije/weback-fallback-directory-resolver-plugin/issues).
+If you encounter any bugs, please consider [opening an issue on GitHub](https://github.com/kije/webpack-fallback-directory-resolver-plugin/issues).

@@ -1,7 +1,7 @@
 {
-  "name": "weback-fallback-directory-resolver-plugin-example",
+  "name": "webpack-fallback-directory-resolver-plugin-example",
   "version": "1.0.0",
-  "description": "Example project for weback-fallback-directory-resolver-plugin",
+  "description": "Example project for webpack-fallback-directory-resolver-plugin",
   "main": "index.js",
   "author": "Kim D. Jeker <github@kije.ch>",
   "license": "MIT",
