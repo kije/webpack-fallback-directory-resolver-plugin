@@ -1,0 +1,35 @@
+{
+  "name": "weback-fallback-directory-resolver-plugin",
+  "version": "0.1.0",
+  "description": "Webpack Resolver plugin to resolve modules and files through a fallback chain at compile time.",
+  "main": "dist/index.js",
+  "repository": "https://github.com/kije/weback-fallback-directory-resolver-plugin.git",
+  "author": "Kim D. Jeker <github@kije.ch>",
+  "license": "MIT",
+  "scripts": {
+    "build": "gulp build",
+    "watch": "gulp watch"
+  },
+
+  "types": "definitions/index.d.ts",
+
+  "directories": {
+    "lib": "dist",
+    "example": "example"
+  },
+
+  "peerDependencies": {
+    "webpack": ">= 1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^8.0.30",
+    "@types/webpack": "^3.0.11",
+    "gulp": "^3.9.1",
+    "gulp-cli": "^1.4.0",
+    "gulp-typescript": "^3.2.2",
+    "gulp-watch": "^4.3.11",
+    "merge2": "^1.2.0",
+    "tslint": "^5.7.0",
+    "typescript": "^2.5.2"
+  }
+}
