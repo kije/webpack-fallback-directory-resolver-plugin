@@ -10,14 +10,11 @@
     "build": "gulp build",
     "watch": "gulp watch"
   },
-
   "types": "definitions/index.d.ts",
-
   "directories": {
     "lib": "dist",
     "example": "example"
   },
-
   "peerDependencies": {
     "webpack": ">= 1.0.0"
   },
