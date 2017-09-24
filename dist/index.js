@@ -23,8 +23,9 @@ class FallbackDirectoryResolverPlugin {
                         query: request.query,
                         request: resolvedComponentPath,
                     };
-                    resolver.doResolve("resolve", obj, null, callback);
+                    resolver.doResolve("resolve", obj, `resolve ${request.request} to ${resolvedComponentPath}`, callback);
                 }, () => {
+                    // todo info
                     callback();
                 });
             }
