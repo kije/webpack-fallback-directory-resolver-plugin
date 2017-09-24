@@ -2,9 +2,11 @@ const Promise = require("bluebird");
 const fs = require("fs");
 const path = require("path");
 
-const existsAsync = (path: string) => new Promise((resolve) => {
-    fs.exists(path, resolve);
-});
+const existsAsync: (path: string) => Promise<boolean> = (path: string) => new Promise(
+    (resolve: (result: boolean) => void) => {
+        fs.exists(path, resolve);
+    }
+);
 
 export interface IFallbackDirectoryResolverPluginOptions {
     directories?: string[];
@@ -18,17 +20,17 @@ export class FallbackDirectoryResolverPlugin {
     };
 
     private options: IFallbackDirectoryResolverPluginOptions;
+    private pathRegex: RegExp;
 
     public constructor(options: IFallbackDirectoryResolverPluginOptions = {}) {
         this.options = Object.assign(FallbackDirectoryResolverPlugin.defaultOptions, options);
+        this.pathRegex = new RegExp(`^#${this.options.prefix}#/`);
     }
 
     public apply(resolver: any) {
-        const pathRegex = new RegExp(`^#${this.options.prefix}#/`);
-
         resolver.plugin("module", (request: any, callback: () => void) => {
-            if (request.request.match(pathRegex)) {
-                const req = request.request.replace(pathRegex, "");
+            if (request.request.match(this.pathRegex)) {
+                const req = request.request.replace(this.pathRegex, "");
 
                 this.resolveComponentPath(req).then(
                     (resolvedComponentPath: string) => {

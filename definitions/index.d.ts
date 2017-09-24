@@ -5,6 +5,7 @@ export interface IFallbackDirectoryResolverPluginOptions {
 export declare class FallbackDirectoryResolverPlugin {
     static defaultOptions: IFallbackDirectoryResolverPluginOptions;
     private options;
+    private pathRegex;
     constructor(options?: IFallbackDirectoryResolverPluginOptions);
     apply(resolver: any): void;
     resolveComponentPath(reqPath: string): Promise<string>;
