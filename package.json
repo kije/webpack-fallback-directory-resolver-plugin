@@ -6,6 +6,17 @@
   "repository": "https://github.com/kije/webpack-fallback-directory-resolver-plugin.git",
   "author": "Kim D. Jeker <github@kije.ch>",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kije/webpack-fallback-directory-resolver-plugin/issues",
+    "email": "github@kije.ch"
+  },
+  "keywords": [
+    "webpack",
+    "resolve",
+    "plugin",
+    "fallback",
+    "webpack plugin"
+  ],
   "scripts": {
     "build": "gulp build",
     "watch": "gulp watch"
