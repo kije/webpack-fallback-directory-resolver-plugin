@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const fs = require("fs");
 const path = require("path");
-class FallbackDirectoryResolverPlugin /* extends ResolvePlugin */ {
+const webpack_1 = require("webpack");
+class FallbackDirectoryResolverPlugin extends webpack_1.ResolvePlugin {
     constructor(options = {}) {
-        // super();
+        super();
         this.options = Object.assign(FallbackDirectoryResolverPlugin.defaultOptions, options);
     }
     apply(resolver) {
@@ -12,40 +12,49 @@ class FallbackDirectoryResolverPlugin /* extends ResolvePlugin */ {
         resolver.plugin("module", (request, callback) => {
             if (request.request.match(pathRegex)) {
                 const req = request.request.replace(pathRegex, "");
-                const resolvedComponentPath = this.resolveComponentPath(req);
-                if (resolvedComponentPath) {
-                    const obj = {
-                        directory: request.directory,
-                        path: request.path,
-                        query: request.query,
-                        request: resolvedComponentPath,
-                    };
-                    resolver.doResolve("resolve", obj, null, callback);
-                }
-                else {
+                this.resolveComponentPath(req, resolver.fs).then((resolvedComponentPath) => {
+                    if (resolvedComponentPath) {
+                        const obj = {
+                            directory: request.directory,
+                            path: request.path,
+                            query: request.query,
+                            request: resolvedComponentPath,
+                        };
+                        resolver.doResolve("resolve", obj, null, callback);
+                    }
+                    else {
+                        callback();
+                    }
+                }, () => {
                     callback();
-                }
+                });
             }
             else {
                 callback();
             }
         });
     }
-    resolveComponentPath(reqPath) {
-        if (this.options.directories) {
-            for (const k in this.options.directories) {
-                if (this.options.directories.hasOwnProperty(k)) {
-                    const dir = path.resolve(this.options.directories[k]);
-                    if (fs.existsSync(dir)) {
+    resolveComponentPath(reqPath, fs) {
+        return new Promise((resolve, reject) => {
+            let resolved = false;
+            if (this.options.directories) {
+                for (const k in this.options.directories) {
+                    if (this.options.directories.hasOwnProperty(k)) {
+                        const dir = path.resolve(this.options.directories[k]);
                         const file = path.resolve(dir, reqPath);
-                        if (fs.existsSync(file)) {
-                            return file;
-                        }
+                        fs.exists(file, (exists) => {
+                            if (!resolved) {
+                                resolved = true;
+                                resolve(file);
+                            }
+                        });
                     }
                 }
             }
-        }
-        return false;
+            else {
+                resolve(false);
+            }
+        });
     }
 }
 FallbackDirectoryResolverPlugin.defaultOptions = {

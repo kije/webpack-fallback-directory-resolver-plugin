@@ -1,13 +1,12 @@
-import * as fs from "fs";
 import * as path from "path";
-// import {ResolvePlugin} from "webpack";
+import {ResolvePlugin} from "webpack";
 
 export interface IFallbackDirectoryResolverPluginOptions {
     directories?: string[];
     prefix?: string;
 }
 
-export class FallbackDirectoryResolverPlugin /* extends ResolvePlugin */ {
+export class FallbackDirectoryResolverPlugin extends ResolvePlugin {
     public static defaultOptions: IFallbackDirectoryResolverPluginOptions = {
         directories: [],
         prefix: "fallback",
@@ -16,7 +15,7 @@ export class FallbackDirectoryResolverPlugin /* extends ResolvePlugin */ {
     private options: IFallbackDirectoryResolverPluginOptions;
 
     public constructor(options: IFallbackDirectoryResolverPluginOptions = {}) {
-        // super();
+        super();
         this.options = Object.assign(FallbackDirectoryResolverPlugin.defaultOptions, options);
     }
 
@@ -27,43 +26,53 @@ export class FallbackDirectoryResolverPlugin /* extends ResolvePlugin */ {
             if (request.request.match(pathRegex)) {
                 const req = request.request.replace(pathRegex, "");
 
-                const resolvedComponentPath = this.resolveComponentPath(req);
+                this.resolveComponentPath(req, resolver.fs).then(
+                    (resolvedComponentPath: string | false) => {
+                        if (resolvedComponentPath) {
+                            const obj = {
+                                directory: request.directory,
+                                path: request.path,
+                                query: request.query,
+                                request: resolvedComponentPath,
+                            };
+                            resolver.doResolve("resolve", obj, null, callback);
+                        } else {
+                            callback();
+                        }
+                    },
+                    () => {
+                        callback();
+                    },
+                );
 
-                if (resolvedComponentPath) {
-                    const obj = {
-                        directory: request.directory,
-                        path: request.path,
-                        query: request.query,
-                        request: resolvedComponentPath,
-                    };
-                    resolver.doResolve("resolve", obj, null, callback);
-                } else {
-                    callback();
-                }
+
             } else {
                 callback();
             }
         });
     }
 
-    public resolveComponentPath(reqPath: string) {
-        if (this.options.directories) {
-            for (const k in this.options.directories) {
-                if (this.options.directories.hasOwnProperty(k)) {
-                    const dir = path.resolve(this.options.directories[k]);
-
-                    if (fs.existsSync(dir)) {
+    public resolveComponentPath(reqPath: string, fs: any): Promise<string | false> {
+        return new Promise<string | false>((resolve, reject) => {
+            let resolved = false;
+            if (this.options.directories) {
+                for (const k in this.options.directories) {
+                    if (this.options.directories.hasOwnProperty(k)) {
+                        const dir = path.resolve(this.options.directories[k]);
                         const file = path.resolve(dir, reqPath);
 
-                        if (fs.existsSync(file)) {
-                            return file;
-                        }
+                        fs.exists(file, (exists: boolean) => {
+                            if (!resolved) {
+                                resolved = true;
+                                resolve(file);
+                            }
+                        });
                     }
                 }
+            } else {
+                resolve(false);
             }
-        }
-
-        return false;
+        });
     }
 }
 
