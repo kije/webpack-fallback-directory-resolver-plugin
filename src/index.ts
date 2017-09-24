@@ -22,9 +22,12 @@ export class FallbackDirectoryResolverPlugin {
     private options: IFallbackDirectoryResolverPluginOptions;
     private pathRegex: RegExp;
 
+    private cache: { [key: string]: Promise<string> };
+
     public constructor(options: IFallbackDirectoryResolverPluginOptions = {}) {
         this.options = Object.assign(FallbackDirectoryResolverPlugin.defaultOptions, options);
         this.pathRegex = new RegExp(`^#${this.options.prefix}#/`);
+        this.cache = {};
     }
 
     public apply(resolver: any) {
@@ -53,13 +56,18 @@ export class FallbackDirectoryResolverPlugin {
     }
 
     public resolveComponentPath(reqPath: string): Promise<string> {
-        if (this.options.directories) {
-            return Promise.filter(
-                this.options.directories.map((dir: string) => path.resolve(path.resolve(dir), reqPath)),
-                (item: string) => existsAsync(item).then((exists: boolean) => exists).catch(() => false),
-            ).any();
+        if (!this.cache[reqPath]) {
+            if (this.options.directories) {
+                this.cache[reqPath] = Promise.filter(
+                    this.options.directories.map((dir: string) => path.resolve(path.resolve(dir), reqPath)),
+                    (item: string) => existsAsync(item).then((exists: boolean) => exists).catch(() => false),
+                ).any();
+            } else {
+                this.cache[reqPath] = Promise.reject("No Fallback directories!");
+            }
         }
-        return Promise.reject("No Fallback directories!");
+
+        return this.cache[reqPath];
     }
 }
 

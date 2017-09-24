@@ -10,6 +10,7 @@ class FallbackDirectoryResolverPlugin {
     constructor(options = {}) {
         this.options = Object.assign(FallbackDirectoryResolverPlugin.defaultOptions, options);
         this.pathRegex = new RegExp(`^#${this.options.prefix}#/`);
+        this.cache = {};
     }
     apply(resolver) {
         resolver.plugin("module", (request, callback) => {
@@ -33,10 +34,15 @@ class FallbackDirectoryResolverPlugin {
         });
     }
     resolveComponentPath(reqPath) {
-        if (this.options.directories) {
-            return Promise.filter(this.options.directories.map((dir) => path.resolve(path.resolve(dir), reqPath)), (item) => existsAsync(item).then((exists) => exists).catch(() => false)).any();
+        if (!this.cache[reqPath]) {
+            if (this.options.directories) {
+                this.cache[reqPath] = Promise.filter(this.options.directories.map((dir) => path.resolve(path.resolve(dir), reqPath)), (item) => existsAsync(item).then((exists) => exists).catch(() => false)).any();
+            }
+            else {
+                this.cache[reqPath] = Promise.reject("No Fallback directories!");
+            }
         }
-        return Promise.reject("No Fallback directories!");
+        return this.cache[reqPath];
     }
 }
 FallbackDirectoryResolverPlugin.defaultOptions = {
