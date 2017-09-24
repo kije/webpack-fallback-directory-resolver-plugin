@@ -12,18 +12,13 @@ class FallbackDirectoryResolverPlugin {
                 const req = request.request.replace(pathRegex, "");
                 this.resolveComponentPath(req, resolver.fs).then((resolvedComponentPath) => {
                     console.log(resolvedComponentPath);
-                    if (resolvedComponentPath) {
-                        const obj = {
-                            directory: request.directory,
-                            path: request.path,
-                            query: request.query,
-                            request: resolvedComponentPath,
-                        };
-                        resolver.doResolve("resolve", obj, null, callback);
-                    }
-                    else {
-                        callback();
-                    }
+                    const obj = {
+                        directory: request.directory,
+                        path: request.path,
+                        query: request.query,
+                        request: resolvedComponentPath,
+                    };
+                    resolver.doResolve("resolve", obj, null, callback);
                 }, () => {
                     callback();
                 });
@@ -35,24 +30,32 @@ class FallbackDirectoryResolverPlugin {
     }
     resolveComponentPath(reqPath, fs) {
         return new Promise((resolve, reject) => {
-            let resolved = false;
             if (this.options.directories) {
+                let resolved = false;
+                let numChecked = 0;
+                let numTotal = this.options.directories.length;
                 for (const k in this.options.directories) {
                     if (this.options.directories.hasOwnProperty(k)) {
                         const dir = path.resolve(this.options.directories[k]);
                         const file = path.resolve(dir, reqPath);
                         fs.exists(file, (exists) => {
+                            numChecked++;
                             console.log(file, exists, resolved);
-                            if (!resolved && exists) {
-                                resolved = true;
-                                resolve(file);
+                            if (!resolved) {
+                                if (exists) {
+                                    resolved = true;
+                                    resolve(file);
+                                }
+                                else if (numChecked === (numTotal)) {
+                                    reject();
+                                }
                             }
                         });
                     }
                 }
             }
             else {
-                resolve(false);
+                reject();
             }
         });
     }
