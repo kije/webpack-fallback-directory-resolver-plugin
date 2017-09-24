@@ -26,6 +26,7 @@ export class FallbackDirectoryResolverPlugin {
 
                 this.resolveComponentPath(req, resolver.fs).then(
                     (resolvedComponentPath: string | false) => {
+                        console.log(resolvedComponentPath);
                         if (resolvedComponentPath) {
                             const obj = {
                                 directory: request.directory,
@@ -60,7 +61,8 @@ export class FallbackDirectoryResolverPlugin {
                         const file = path.resolve(dir, reqPath);
 
                         fs.exists(file, (exists: boolean) => {
-                            if (!resolved) {
+                            console.log(file, exists, resolved);
+                            if (!resolved && exists) {
                                 resolved = true;
                                 resolve(file);
                             }
