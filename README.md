@@ -58,7 +58,7 @@ export default (num) => {
 
 ```js 
 // /greeter/src/en/ordnial.js
-// different ordnial prefixes for en
+// different ordnial postfixes for en
 
 export default (num) => {
     switch (num) {
@@ -128,11 +128,11 @@ module.exports = {
 import translations from "#language-resolve#/translations.js"; // translations is dynamically resolved to
 import ordinal from "#language-resolve#/ordnial.js"; 
 
-const greet(name) => {
+const greet = (name) => {
     console.log(`${translations.hello}`)
 };
 
-const greetNthVisitor(num) => {
+const greetNthVisitor = (num) => {
     // this will output "You are the 1st Visitor" in the en build, 
     // and "Du bist der 1. Besucher" in the de  build.
     console.log(`${translations.nth_visitor_start} ${ordinal(num)} ${translations.visitor}`)
