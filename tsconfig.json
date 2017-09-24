@@ -1,7 +1,7 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "module": "CommonJS",
+    "module": "commonjs",
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
@@ -14,7 +14,8 @@
     "pretty": true,
     "removeComments": false,
     "stripInternal": true,
-    "target": "ES6"
+    "target": "ES6",
+    "strict": true
   },
 
   "files": [

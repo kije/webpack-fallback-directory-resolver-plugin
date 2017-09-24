@@ -18,6 +18,7 @@
     "webpack plugin"
   ],
   "scripts": {
+    "prepublish": "npm run build",
     "build": "gulp build",
     "watch": "gulp watch"
   },
