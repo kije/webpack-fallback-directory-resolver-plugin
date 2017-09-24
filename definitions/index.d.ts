@@ -7,5 +7,5 @@ export declare class FallbackDirectoryResolverPlugin {
     private options;
     constructor(options?: IFallbackDirectoryResolverPluginOptions);
     apply(resolver: any): void;
-    resolveComponentPath(reqPath: string, fs: any): Promise<string>;
+    resolveComponentPath(reqPath: string): Promise<string>;
 }
