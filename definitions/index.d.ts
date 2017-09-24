@@ -1,10 +1,8 @@
-/// <reference types="webpack" />
-import { ResolvePlugin } from "webpack";
 export interface IFallbackDirectoryResolverPluginOptions {
     directories?: string[];
     prefix?: string;
 }
-export declare class FallbackDirectoryResolverPlugin extends ResolvePlugin {
+export declare class FallbackDirectoryResolverPlugin {
     static defaultOptions: IFallbackDirectoryResolverPluginOptions;
     private options;
     constructor(options?: IFallbackDirectoryResolverPluginOptions);

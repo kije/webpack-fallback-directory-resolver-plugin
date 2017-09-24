@@ -1,12 +1,11 @@
 import * as path from "path";
-import {ResolvePlugin} from "webpack";
 
 export interface IFallbackDirectoryResolverPluginOptions {
     directories?: string[];
     prefix?: string;
 }
 
-export class FallbackDirectoryResolverPlugin extends ResolvePlugin {
+export class FallbackDirectoryResolverPlugin {
     public static defaultOptions: IFallbackDirectoryResolverPluginOptions = {
         directories: [],
         prefix: "fallback",
@@ -15,7 +14,6 @@ export class FallbackDirectoryResolverPlugin extends ResolvePlugin {
     private options: IFallbackDirectoryResolverPluginOptions;
 
     public constructor(options: IFallbackDirectoryResolverPluginOptions = {}) {
-        super();
         this.options = Object.assign(FallbackDirectoryResolverPlugin.defaultOptions, options);
     }
 

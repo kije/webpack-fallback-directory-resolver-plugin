@@ -1,10 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = require("path");
-const webpack_1 = require("webpack");
-class FallbackDirectoryResolverPlugin extends webpack_1.ResolvePlugin {
+class FallbackDirectoryResolverPlugin {
     constructor(options = {}) {
-        super();
         this.options = Object.assign(FallbackDirectoryResolverPlugin.defaultOptions, options);
     }
     apply(resolver) {
