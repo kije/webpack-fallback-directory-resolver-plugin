@@ -1,4 +1,4 @@
-const FallbackDirectoryResolverPlugin = require('webpack-fallback-directory-resolver-plugin');
+const FallbackDirectoryResolverPlugin = require('../dist/index');
 const path = require('path');
 
 module.exports = {
