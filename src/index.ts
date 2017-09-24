@@ -1,5 +1,10 @@
-import * as fs from "fs";
-import * as path from "path";
+const Promise = require("bluebird");
+const fs = require("fs");
+const path = require("path");
+
+const existsAsync = (path: string) => new Promise((resolve) => {
+    fs.exists(path, resolve);
+});
 
 export interface IFallbackDirectoryResolverPluginOptions {
     directories?: string[];
@@ -46,34 +51,13 @@ export class FallbackDirectoryResolverPlugin {
     }
 
     public resolveComponentPath(reqPath: string): Promise<string> {
-        return new Promise<string>((resolve, reject) => {
-            if (this.options.directories) {
-                let resolved = false;
-                let numChecked = 0;
-                const numTotal = this.options.directories.length;
-
-                for (const k in this.options.directories) {
-                    if (this.options.directories.hasOwnProperty(k)) {
-                        const dir = path.resolve(this.options.directories[k]);
-                        const file = path.resolve(dir, reqPath);
-
-                        fs.exists(file, (exists: boolean) => {
-                            numChecked++;
-                            if (!resolved) {
-                                if (exists) {
-                                    resolved = true;
-                                    resolve(file);
-                                } else if (numChecked >= numTotal) {
-                                    reject();
-                                }
-                            }
-                        });
-                    }
-                }
-            } else {
-                reject();
-            }
-        });
+        if (this.options.directories) {
+            return Promise.filter(
+                this.options.directories.map((dir: string) => path.resolve(path.resolve(dir), reqPath)),
+                (item: string) => existsAsync(item).then((exists: boolean) => exists).catch(() => false),
+            ).any();
+        }
+        return Promise.reject("No Fallback directories!");
     }
 }
 
